@@ -84,6 +84,16 @@ namespace ct {
 		return digits;
 	}
 	
+	int* Baseset::baseArrayToRaw(const char* ca, baset l) {
+		int* raws = new int[l];
+		
+		for(baset i = 0; i < l; i++) {
+			raws[l] = ctoi(*(ca + i));
+		}
+		
+		return raws;
+	}
+	
 	// Constructors
 	
 	Baseset::Baseset(baset number, int base) {
@@ -92,14 +102,13 @@ namespace ct {
 		mDigits = numberToBase(number, mNumberBase);
 		if(mDigits) {
 			mLength = digitsForBase(number, mNumberBase);
+			mRaws = baseArrayToRaw(mDigits, mLength);
 		}
 		else {
 			mNumberBase = 0;
-			mLength = 0;			
+			mLength = 0;
+			mRaws = 0;
 		}
-		
-		mReDigits = 0;
-		mRaws = 0;
 		
 		for(baset i = 0; i < mLength; i++) 
 			std::cout << mDigits[i];
@@ -131,15 +140,16 @@ namespace ct {
 			mDigits = new char[ s.size() ];
 			strncpy( mDigits, s.c_str(), s.size() );
 			mLength = s.size();
+			mRaws = baseArrayToRaw(mDigits, mLength);
 		}
 		else {
 			mNumberBase = 0;
 			mDigits = 0;
-			mLength = 1;
+			mLength = 0;
+			mRaws = 0;
 		}
 		
-		mReDigits = 0;
-		mRaws = 0;
+		
 		
 		for(baset i = 0; i < mLength; i++) 
 			std::cout << mDigits[i];
@@ -150,9 +160,7 @@ namespace ct {
 		mLength = bs.length();
 		mNumberBase = bs.base();
 		strncpy(mDigits, bs.digits(), mLength);
-		
-		mReDigits = 0;
-		mRaws = 0;
+		mRaws = baseArrayToRaw(mDigits, mLength);
 	}
 	
 	// Destructor
@@ -160,9 +168,6 @@ namespace ct {
 	Baseset::~Baseset() {
 		if(mDigits)
 			delete [] mDigits;
-		
-		if(mReDigits)
-			delete [] mReDigits;
 		
 		if(mRaws)
 			delete [] mRaws;
@@ -176,25 +181,49 @@ namespace ct {
 		if(newBase != mNumberBase) {
 			baset d = decimal();
 			delete [] mDigits;
+			delete [] mRaws;
 			mDigits = numberToBase(d, newBase);
+			mRaws = baseArrayToRaw(mDigits, mLength);
 		}
 	}
 	
 	// Const Accessors
+	
+	const std::string Baseset::d_str() const {
+		char* c_digits_str = new char[mLength+1];
+		strncpy(c_digits_str, mDigits, mLength);
+		c_digits_str[mLength] = 0;
+		return std::string(c_digits_str);
+	}
 	
 	const Baseset Baseset::copyToBase(int newBase) const {
 		return Baseset(decimal(), newBase);
 	}
 	
 	const baset Baseset::decimal() const {
-		baset tot = 0;
-		for(baset a = 0; a < mLength; a++) {
-			baset exponent = mLength - 1 - a;
-			unsigned n = ctoi(mDigits[a]);
-			
-			tot += n * pow(mNumberBase, exponent);
+		// Check digits in s < base
+		bool ok = true;
+		for(baset i = 0; i < mLength; i++) {
+			int digit = ctoi( mDigits[i] );
+			if(digit >= mNumberBase) {
+				bool ok = false;
+				break;
+			}
 		}
-		return tot;
+		
+		if(ok) {
+			baset tot = 0;
+			for(baset a = 0; a < mLength; a++) {
+				baset exponent = mLength - 1 - a;
+				unsigned n = ctoi(mDigits[a]);
+			
+				tot += n * pow(mNumberBase, exponent);
+			}
+			return tot;
+		}
+		else {
+			return ULONG_MAX;
+		}
 	}
 	
 	// Operators
@@ -204,13 +233,43 @@ namespace ct {
 			return *this;
 		}
 		delete [] mDigits;
+		delete [] mRaws;
 		mNumberBase = b1.base();
 		mLength = b1.length();
 		strncpy(mDigits, b1.digits(), mLength);
-		
-		mReDigits = 0;
-		mRaws = 0;
+		mRaws = baseArrayToRaw(mDigits, mLength);
 		
 		return *this;
 	}
+	
+	bool Baseset::operator==(const Baseset & b1) const {
+		if( decimal() == b1.decimal() )
+			return true;
+		return false;
+	}
+
+	bool Baseset::operator>(const Baseset & b1) const {
+		if( decimal() > b1.decimal() )
+			return true;
+		return false;
+	}
+	
+	bool Baseset::operator<(const Baseset & b1) const {
+		if( decimal() < b1.decimal() )
+			return true;
+		return false;		
+	}
+
+	bool Baseset::operator>=(const Baseset & b1) const {
+		if( decimal() >= b1.decimal() )
+			return true;
+		return false;		
+	}
+
+	bool Baseset::operator<=(const Baseset & b1) const {
+		if( decimal() <= b1.decimal() )
+			return true;
+		return false;		
+	}
+
 };

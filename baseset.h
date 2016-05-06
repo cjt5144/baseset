@@ -15,19 +15,20 @@ namespace ct {
 	class Baseset {
 		private:
 			// Minimum and Maximum base possible base numbers
-			static const int MINB = 2;
-			static const int MAXB = 62;
 			static const baset MAXDEC = UINT_MAX;
 			static const baset MAXDLIN = ULONG_MAX-4/2;
+			static const int MINB = 2;
+			static const int MAXB = 62;
 			
 			// Holds character representation for base mNumberBase
+			baset mLength;
 			char* mDigits; // not null-terminated
-			char* mReDigits;
 			int* mRaws;
 			int mNumberBase;
-			baset mLength;
+			
 			// Private Member Functions
 			char* numberToBase(baset number, int base);
+			int* baseArrayToRaw(const char* ca, baset l);
 			
 		public:
 			// Constructors
@@ -36,27 +37,30 @@ namespace ct {
 			Baseset(const Baseset & bs);
 			// Destructors
 			~Baseset();
+			// Static Constant Accessors
+			static baset max_dec() {return MAXDEC;};
+			static baset max_d_lin() {return MAXDLIN;};
+			static int maxbase() {return MAXB;};
+			static int minbase() {return MINB;};
 			// Modifying Accessors
-			char & at(const baset & i) {return mDigits[i];}; // May set invalid number for base
 			void changeBase(int newBase);
 			// Const Accessors
 			const char & at(const baset & i) const {return mDigits[i];};
+			const int & r_at(const baset & i) const {return mRaws[i];};
 			const char* digits() const {return mDigits;}; // Not null-terminated
-// 			const std::string d_str() const;
-// 			const char* reDigits() const; // Not null-terminated reverse
-// 			const std::string red_str() const; // reverse
-// 			int* rawDigits() const;
+			const std::string d_str() const;
+			int* rawDigits() const {return mRaws;};
 			baset length() const {return mLength;};
 			int base() const {return mNumberBase;};
 			const Baseset copyToBase(int newBase) const;
 			const baset decimal() const;
 			// Operators
-			Baseset & operator=(const Baseset & B1);
-// 			bool operator==(const Baseset & B1) const;
-// 			bool operator>(const Baseset & B1) const;
-// 			bool operator<(const Baseset & B1) const;
-// 			bool operator>=(const Baseset & B1) const;
-// 			bool operator<=(const Baseset & B1) const;
+			Baseset & operator=(const Baseset & b1);
+			bool operator==(const Baseset & b1) const;
+			bool operator>(const Baseset & b1) const;
+			bool operator<(const Baseset & b1) const;
+			bool operator>=(const Baseset & b1) const;
+			bool operator<=(const Baseset & b1) const;
 	};
 };
 

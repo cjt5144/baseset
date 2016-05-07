@@ -40,7 +40,7 @@ namespace ct {
 	
 	// Private Member Functions
 	
-	char* Baseset::numberToBase(baset number, int base) {
+	char * Baseset::numberToBase(baset number, int base) {
 		// Input checking
 		bool ok = true;
 		
@@ -84,16 +84,6 @@ namespace ct {
 		return digits;
 	}
 	
-	int* Baseset::baseArrayToRaw(const char* ca, baset l) {
-		int* raws = new int[l];
-		
-		for(baset i = 0; i < l; i++) {
-			raws[l] = ctoi(*(ca + i));
-		}
-		
-		return raws;
-	}
-	
 	// Constructors
 	
 	Baseset::Baseset(baset number, int base) {
@@ -102,65 +92,23 @@ namespace ct {
 		mDigits = numberToBase(number, mNumberBase);
 		if(mDigits) {
 			mLength = digitsForBase(number, mNumberBase);
-			mRaws = baseArrayToRaw(mDigits, mLength);
 		}
 		else {
 			mNumberBase = 0;
 			mLength = 0;
-			mRaws = 0;
 		}
 		
-		for(baset i = 0; i < mLength; i++) 
-			std::cout << mDigits[i];
-		std::cout << std::endl;
-	}
-	
-	Baseset::Baseset(const std::string & s, int base) {
-		// Check digits in s < base
-		bool ok = true;
-		for(baset i = 0; i < s.size(); i++) {
-			int digit = ctoi( s.at(i) );
-			if(digit >= base) {
-				bool ok = false;
-				break;
-			}
-		}
-		
-		if(base > MAXB) {
-			std::cout << "\n[\\] Warning: base exceded MAXB." << std::endl;
-			ok = false;
-		}
-		else if(base < MINB) {
-			std::cout << "\n[\\] Warning: base below MINB." << std::endl;			
-			ok = false;
-		}
-		
-		if(ok) {
-			mNumberBase = base;
-			mDigits = new char[ s.size() ];
-			strncpy( mDigits, s.c_str(), s.size() );
-			mLength = s.size();
-			mRaws = baseArrayToRaw(mDigits, mLength);
-		}
-		else {
-			mNumberBase = 0;
-			mDigits = 0;
-			mLength = 0;
-			mRaws = 0;
-		}
-		
-		
-		
-		for(baset i = 0; i < mLength; i++) 
-			std::cout << mDigits[i];
-		std::cout << std::endl;
+		std::cout << d_str() << std::endl;
+		std::cout << reverse_d_str() << std::endl;
 	}
 	
 	Baseset::Baseset(const Baseset & bs) {
 		mLength = bs.length();
 		mNumberBase = bs.base();
-		strncpy(mDigits, bs.digits(), mLength);
-		mRaws = baseArrayToRaw(mDigits, mLength);
+		strncpy(mDigits, bs.mDigits, mLength);
+
+		std::cout << d_str() << std::endl;
+		std::cout << reverse_d_str() << std::endl;
 	}
 	
 	// Destructor
@@ -169,21 +117,23 @@ namespace ct {
 		if(mDigits)
 			delete [] mDigits;
 		
-		if(mRaws)
-			delete [] mRaws;
-		
 		std::cout << "Baseset object destroyed" << std::endl; 
 	}
 	
 	// Modifying Accessors
 	
+	void Baseset::at(const baset & i, const char & c) {
+		if(mNumberBase <= int(c)) {
+			return;
+		}
+		mDigits[i] = c;
+	}
+	
 	void Baseset::changeBase(int newBase) {
 		if(newBase != mNumberBase) {
 			baset d = decimal();
 			delete [] mDigits;
-			delete [] mRaws;
 			mDigits = numberToBase(d, newBase);
-			mRaws = baseArrayToRaw(mDigits, mLength);
 		}
 	}
 	
@@ -192,6 +142,17 @@ namespace ct {
 	const std::string Baseset::d_str() const {
 		char* c_digits_str = new char[mLength+1];
 		strncpy(c_digits_str, mDigits, mLength);
+		c_digits_str[mLength] = 0;
+		return std::string(c_digits_str);
+	}
+	
+	const std::string Baseset::reverse_d_str() const {
+		char * c_digits_str = new char[mLength+1];
+		Baseset::const_reverse_iterator pr;
+		baset i = 0;
+		for(pr = crbegin(); pr != crend(); pr--, i++) {
+			c_digits_str[i] = *pr;
+		}
 		c_digits_str[mLength] = 0;
 		return std::string(c_digits_str);
 	}
@@ -233,11 +194,9 @@ namespace ct {
 			return *this;
 		}
 		delete [] mDigits;
-		delete [] mRaws;
 		mNumberBase = b1.base();
 		mLength = b1.length();
-		strncpy(mDigits, b1.digits(), mLength);
-		mRaws = baseArrayToRaw(mDigits, mLength);
+		strncpy(mDigits, b1.mDigits, mLength);
 		
 		return *this;
 	}

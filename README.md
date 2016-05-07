@@ -8,8 +8,8 @@ Baseset class.
 The class provides...
 * string representation for converted number.
 * reverse string representation for converted number.
-* iterator and const_iterator types
-* reverse_iterator and const_reverse_iterator types
+* iterator and const\_iterator types
+* reverse\_iterator and const\_reverse\_iterator types
 * modifiable access to individual digits for non-cont Baseset objects.
 
 ## Examples

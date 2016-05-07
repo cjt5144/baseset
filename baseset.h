@@ -68,7 +68,7 @@ namespace ct {
 		void at(const baset & i, const char & c); // Checks input; Leaves unchanged if invalid
 		void changeBase(int newBase);
 		// Const Accessors
-		const char & at(const baset & i) const {return mDigits[i];};
+		const char & at(const baset & i) const;
 		const std::string d_str() const;
 		const std::string reverse_d_str() const;
 		baset length() const {return mLength;};
@@ -77,7 +77,7 @@ namespace ct {
 		const baset decimal() const;
 		// Operators
 		Baseset & operator=(const Baseset & b1);
-		const char & operator[](const baset & i) const {return mDigits[i];};
+		const char & operator[](const baset & i) const {return at(i);};
 		bool operator==(const Baseset & b1) const;
 		bool operator>(const Baseset & b1) const;
 		bool operator<(const Baseset & b1) const;

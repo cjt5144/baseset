@@ -123,7 +123,7 @@ namespace ct {
 	// Modifying Accessors
 	
 	void Baseset::at(const baset & i, const char & c) {
-		if(mNumberBase <= int(c)) {
+		if(mNumberBase <= int(c) || i >= mLength) {
 			return;
 		}
 		mDigits[i] = c;
@@ -138,6 +138,12 @@ namespace ct {
 	}
 	
 	// Const Accessors
+	
+	const char & Baseset::at(const baset & i) const {
+		if(i >= mLength)
+			return mDigits[mLength-1];
+		return mDigits[i];
+	}
 	
 	const std::string Baseset::d_str() const {
 		char* c_digits_str = new char[mLength+1];

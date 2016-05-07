@@ -1,3 +1,9 @@
+/*
+COMPILE WITH:
+-------------
+g++ -std=c++11 -o baseset.o -c baseset.cpp
+*/
+
 #ifndef BASESET_H_
 #define BASESET_H_
 

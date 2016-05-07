@@ -1,9 +1,3 @@
-/*
-COMPILE WITH:
--------------
-g++ -std=c++11 -o baseset.o -c baseset.cpp
-*/
-
 #include "baseset.h"
 #include <cstring>
 #include <cmath>

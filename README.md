@@ -29,7 +29,7 @@ Compile shared object in shell using `g++ -std=c++11 -o baseset.o -c baseset.cpp
 
 Test written in basesettest.cpp.
 
-Compile baseset library and test using `g++ -std=c++11 basesettest.cpp baseset.cpp -o test`.
+Compile baseset library and run test in shell using `g++ -std=c++11 basesettest.cpp baseset.cpp -o test`.
 
 Run Test with `./test`.
 

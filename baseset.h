@@ -26,7 +26,7 @@ namespace ct {
 		static const baset MAXDLIN = ULONG_MAX-4/2;
 		static const int MINB = 2;
 		static const int MAXB = 62;
-	
+		
 	private:
 		// Holds character representation for base mNumberBase
 		baset mLength;

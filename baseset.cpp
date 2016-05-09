@@ -45,12 +45,12 @@ namespace ct {
 		bool ok = true;
 		
 		if(number >= MAXDEC) {
-			std::cout << "\n[\\] Warning: number exceded MAXDEC. Set to 0." << std::endl;
+			std::cout << "\n[\\] Warning: number exceeded MAXDEC. Set to 0." << std::endl;
 			ok = false;
 		}
 		
 		if(base > MAXB) {
-			std::cout << "\n[\\] Warning: base exceded MAXB. Set to 10." << std::endl;
+			std::cout << "\n[\\] Warning: base exceeded MAXB. Set to 10." << std::endl;
 			ok = false;
 		}
 		else if(base < MINB) {
